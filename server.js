@@ -1,5 +1,8 @@
 const express = require('express');
 const mongoose = require('mongoose');
+const redis = require('redis');
+const { buildSchema } = require('graphql');
+const expressGraphql = require('express-graphql');
 
 const app = express();
 
