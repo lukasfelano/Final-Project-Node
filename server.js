@@ -28,7 +28,7 @@ const connect = async () => {
 connect();
 
 app.get('/', (req, res) => {
-    res.render("index");
+    res.render("form");
 });
 
 app.listen(8080, () => {

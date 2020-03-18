@@ -16,6 +16,7 @@
     "express-graphql": "^0.9.0",
     "graphql": "^14.6.0",
     "mongoose": "^5.9.4",
+    "promise-redis": "0.0.5",
     "redis": "^3.0.2"
   }
 }
