@@ -12,33 +12,35 @@ const schema = buildSchema(`
     }
     type Query {
         expense : [Expense]
-        findExpense(id: String!): Expense 
+        findExpense(id: String!): Expense
     }
 `);
 
 const root = {
     expense: async () => {
-        // const client = redis.createClient();
-        // var realResult
-        // client.get('Expense', async (err, result) => {
-        //     if(err) throw err;
-        //     if(result) {
-        //         const redisExpense = JSON.parse(result);
-        //         realResult = result;
-        //     }else{
-        //         const allExpense = await Expense.find();
-        //         const jsonExpense = JSON.stringify(allExpense);
-        //         client.set('Expense', jsonExpense);
-        //         realResult = allExpense;
-        //     }
-        // })
-        // console.log(realResult);
-        // return realResult;
-        return await Expense.find({});
+        const client = redis.createClient();
+        client.get('Expense', async (err, result) => {
+            if(err) throw err;
+            if(result) {
+                const redisExpense = JSON.parse(result);
+                const change = JSON.stringify(result);
+                console.log(redisExpense);
+                return change;
+            }else{
+                const dataAll = await Expense.find({});
+                const jsonExpense = JSON.stringify(dataAll);
+                console.log(jsonExpense);
+                client.set('Expense', jsonExpense);
+                return await Expense.find({});
+            }
+        });
+        // console.log(await Expense.find({}));
+        // return await Expense.find({});
     },
+
     findExpense: async ({ id }) => {
-        console.log(await Expense.findById({_id: id}));
-        return await Expense.findById({_id: id});
+        const findexone = await Expense.findById({_id: id});
+        return findexone;
     }
 }
 
@@ -58,6 +60,9 @@ const findExpense = async (req, res) => {
                 const redisExpense = JSON.parse(result);
                 res.json(redisExpense);
             }else{
+                const data = await Expense.find({});
+                const jsonString = JSON.stringify(data);
+                client.set('Expense', jsonString);
                 res.json(Expense.find());
             }
         })
